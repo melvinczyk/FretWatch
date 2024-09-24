@@ -34,32 +34,46 @@ if __name__ == '__main__':
     new_frame_time = 0
     prev_frame_time = 0
     grey = np.zeros((1080, 1920, 3), dtype=np.uint8)
-    grey[:, :, :] = [128, 128, 128]
+    grey[:, :, :] = [0, 255, 0]
 
     fps_map = [
         (0, 10, (0, 0, 255)),
         (11, 20, (0, 255, 255)),
         (21, float('inf'), (0, 255, 0))
     ]
-    counter = 0
+    scale = 127  # Default threshold value
     fps = 0
+    counter = 0
+
     while True:
         frame = grab_frame(camera)
         new_frame_time = time.time()
+
         if counter == 20:
             fps = 1 / (new_frame_time - prev_frame_time)
             counter = 0
         else:
             counter += 1
+
         prev_frame_time = new_frame_time
         fps = int(fps)
 
-        thresh = threshold(frame, 128)
+        thresh = cv.bitwise_not(frame, grey)
+        blur = cv.GaussianBlur(frame, (5,5),0)
+        edge = cv.Canny(frame, 50, 100)
 
-        cv.rectangle(frame, (100, 100), (250, 150), (0,0,0), -1)
+        cv.rectangle(frame, (100, 100), (250, 150), (0, 0, 0), -1)
         cv.putText(frame, f'{fps} FPS', (120, 135), cv.FONT_HERSHEY_PLAIN, 2, get_fps_color(fps), 2, cv.LINE_AA)
-        cv.imshow('frame',thresh)
-        if cv.waitKey(1) == ord('q'):
+        cv.imshow('frame', edge)
+
+        key = cv.waitKey(1) & 0xFF
+        if key == ord('q'):
             break
+        elif key == ord('t'):
+            try:
+                # Update threshold value
+                scale = int(input("Enter new threshold value: "))
+            except ValueError:
+                print("Please enter a valid integer.")
     camera.release()
     cv.destroyAllWindows()
