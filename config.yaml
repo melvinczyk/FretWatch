@@ -1,0 +1,6 @@
+recording:
+  default_input: 2
+  default_output: 5
+  sample_rate: 44100
+  duration: 10.0
+  channels: 1
