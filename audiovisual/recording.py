@@ -47,6 +47,7 @@ def record_file(input_device: int=None, file_name: str='output.wav', duration: f
 
 
 def play_audio(array: np.ndarray, output_device: int, sr: int=44100):
+    print(f"Signal: {array}")
     sd.default.device = None, output_device
     sd.play(array, sr)
 
