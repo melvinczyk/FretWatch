@@ -1,13 +1,13 @@
 from pathlib import Path
 import audiovisual.recording as av
 import audiovisual.signal_processing as sp
-import utils
+from config import settings
 from matplotlib import pyplot as plt
 
 
 if __name__ == "__main__":
-    utils.set_devices()
-    #ecording = av.record_array(input_device=config_recording['default_input'], duration=3.0)
+    print(settings.devices)
+    #recording = av.record_array(input_device=config_recording['default_input'], duration=3.0)
     base = 16.35
     octave_0 = sp.create_sin(5.0, base)
     octave_1 = sp.create_sin(5.0, base * 2)

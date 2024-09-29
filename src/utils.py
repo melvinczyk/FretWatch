@@ -1,6 +1,5 @@
 import yaml
 from pathlib import Path
-import sounddevice as sd
 
 
 def load_config(config_file='config.yaml'):
@@ -12,9 +11,3 @@ def load_config(config_file='config.yaml'):
 
     return config
 
-
-def set_devices():
-    config = load_config()
-    recording = config['recording']
-    sd.default.device = (recording['default_input'], recording['default_output'])
-    sd.default.samplerate = recording['sample_rate']
