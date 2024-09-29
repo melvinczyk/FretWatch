@@ -11,7 +11,7 @@ def load_file(file) -> (np.ndarray, float):
         return None
 
 
-def create_sin(duration: float, frequency: int, sr: int=44100) -> np.ndarray:
+def create_sin(duration: float, frequency: float, sr: int=44100) -> np.ndarray:
     t = np.linspace(0, duration, int(sr * duration), endpoint=False)
     amplitude = 0.5
     sine_wave = amplitude * np.sin(2 * np.pi * frequency * t)
@@ -33,5 +33,7 @@ def extract_frequency(signal: np.ndarray, sr: int):
     prominent_freq = positive_freq[prominent_frequencies_indices]
 
     dominant_freq = positive_freq[np.argmax(positive_magnitude)]
+
+
 
     return prominent_freq

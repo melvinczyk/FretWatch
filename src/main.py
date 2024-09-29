@@ -6,15 +6,17 @@ from matplotlib import pyplot as plt
 
 
 if __name__ == "__main__":
-    config = utils.load_config()
-    config_recording = config['recording']
-    recording = av.record_array(input_device=config_recording['default_input'], duration=5.0)
-    sine_wave = sp.create_sin(5.0, 65)
-    another_wave = sp.create_sin(5.0, 98)
-    combined = sine_wave + another_wave
-    print(sp.extract_frequency(recording, 44100))
-    fig, axis = plt.subplots(2, 1)
-    axis[0].plot(recording)
-    axis[1].plot(combined)
+    utils.set_devices()
+    #ecording = av.record_array(input_device=config_recording['default_input'], duration=3.0)
+    base = 16.35
+    octave_0 = sp.create_sin(5.0, base)
+    octave_1 = sp.create_sin(5.0, base * 2)
+    octave_2 = sp.create_sin(5.0, base * 4)
+    octave_3 = sp.create_sin(5.0, base * 8)
+    octave_4 = sp.create_sin(5.0, base * 16)
+    combined = octave_1 + octave_0 + octave_2 + octave_3 + octave_4
+
+    plt.plot(combined)
     plt.show()
-    #av.play_audio(recording, output_device=config_recording['default_output'])
+    fig, axis = plt.subplots(2, 1)
+    av.play_audio(combined)

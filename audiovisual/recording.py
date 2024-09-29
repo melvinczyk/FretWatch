@@ -46,10 +46,10 @@ def record_file(input_device: int=None, file_name: str='output.wav', duration: f
     return recordings_path
 
 
-def play_audio(array: np.ndarray, output_device: int, sr: int=44100):
+def play_audio(array: np.ndarray):
     print(f"Signal: {array}")
-    sd.default.device = None, output_device
-    sd.play(array, sr)
+    sd.play(array)
+    sd.wait()
 
 
 def show_progress(duration):
