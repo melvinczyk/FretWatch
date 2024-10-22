@@ -12,8 +12,7 @@ def load_file(file) -> (np.ndarray, float):
         return None
 
 
-def create_sin(frequency: float, duration: float, sr: int=44100) -> np.ndarray:
-    print(f"default: {sd.default.samplerate}")
+def create_sin(frequency: float, duration: float=5.0, sr: int=44100) -> np.ndarray:
     t = np.linspace(0, duration, int(sr * duration), endpoint=False)
     amplitude = 0.5
     sine_wave = amplitude * np.sin(2 * np.pi * frequency * t)

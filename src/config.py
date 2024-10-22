@@ -2,7 +2,7 @@ import sounddevice as sd
 from utils import load_config
 
 
-class GlobalSettings():
+class GlobalSettings:
     _instance = None
 
     def __new__(cls, *args, **kwargs):
