@@ -19,7 +19,7 @@ def record_array(input_device: int=None, duration: float=10.0, sr: float=sd.defa
     return recording
 
 
-def record_file(input_device: int=None, file_name: str='output.wav', duration: float=10.0, sr: int=sd.default.samplerate) -> Path:
+def record_file(input_device: int=None, file_name: str='output.wav', duration: float=10.0, sr: int=44100, channels: int=1) -> Path:
     if input_device is not None:
         sd.default.device = (input_device, sd.default.device[1])
 
@@ -28,13 +28,16 @@ def record_file(input_device: int=None, file_name: str='output.wav', duration: f
     recordings_dir.mkdir(exist_ok=True)
     recordings_path = recordings_dir / file_name
 
-    recording = sd.rec(int(duration * sr), samplerate=sr)
+    print("Recording started...")
+    recording = sd.rec(int(duration * sr), samplerate=sr, channels=channels)
 
     display_thread = threading.Thread(target=show_progress, args=(duration,))
     display_thread.start()
     sd.wait()
     display_thread.join()
-    write(str(recordings_path), sr, data=recording.astype(np.int16))
+
+    write(str(recordings_path), sr, data=recording.astype(np.int64))
+    print(recording)
     print(f"Path saved to: {recordings_path}")
     return recordings_path
 

@@ -60,7 +60,7 @@ if __name__ == '__main__':
 
         thresh = cv.bitwise_not(frame, grey)
         blur = cv.GaussianBlur(frame, (5,5),0)
-        edge = cv.Canny(frame, 50, 100)
+        edge = cv.Canny(frame, 60, 110)
 
         cv.rectangle(frame, (100, 100), (250, 150), (0, 0, 0), -1)
         cv.putText(frame, f'{fps} FPS', (120, 135), cv.FONT_HERSHEY_PLAIN, 2, get_fps_color(fps), 2, cv.LINE_AA)

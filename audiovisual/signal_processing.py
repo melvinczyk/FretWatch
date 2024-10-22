@@ -20,8 +20,14 @@ def create_sin(frequency: float, duration: float, sr: int=44100) -> np.ndarray:
     return sine_wave
 
 
-def create_harmonic_sin(base_freq: float, harmonics: int, sr: int=sd.default.samplerate) -> np.ndarray:
-    pass
+def create_harmonic_sin(base_freq: float, harmonics: int, duration: int=5.0) -> np.ndarray:
+    combined = create_sin(base_freq, duration)
+    exponent = 2
+    for i in range(0, harmonics):
+        octave = create_sin(frequency=base_freq * exponent, duration=duration)
+        combined += octave
+        exponent *= 2
+    return combined
 
 
 def extract_frequency(signal: np.ndarray, sr: int):
