@@ -103,20 +103,16 @@ def find_top_notes(fft, num, xf):
     return found
 
 
-# Main Execution
 def main():
-    # Get the file extension
     file_extension = os.path.splitext(AUDIO_FILE)[1].lower()
 
     if file_extension == '.wav':
-        # Handle WAV files
         fs, data = wavfile.read(AUDIO_FILE)
-        audio = data.T[0]  # Extract one channel
+        audio = data.T[0]
     elif file_extension == '.mp3':
-        # Handle MP3 files
         audio_segment = AudioSegment.from_mp3(AUDIO_FILE)
-        fs = audio_segment.frame_rate  # Sample rate
-        audio = audio_segment.get_array_of_samples()  # Convert to numpy array
+        fs = audio_segment.frame_rate
+        audio = audio_segment.get_array_of_samples()
     else:
         raise ValueError("Unsupported audio format. Please provide a WAV or MP3 file.")
 
@@ -126,7 +122,6 @@ def main():
     FRAME_OFFSET = int(len(audio) / FRAME_COUNT)
     xf = np.fft.rfftfreq(FFT_WINDOW_SIZE, 1 / fs)
 
-    # Calculate Hanning window
     window = hanning_window(FFT_WINDOW_SIZE)
 
     # Pass 1: Find maximum amplitude for scaling
