@@ -9,15 +9,15 @@ from pydub import AudioSegment
 
 # Constants and Configuration
 PATH = '/Users/nicholasburczyk/Documents/Coding/FretWatch/audiovisual'
-AUDIO_FILE = "/Users/nicholasburczyk/Documents/Coding/FretWatch/audiovisual/recordings/Drop_C#.mp3"  # Path to the audio file
+AUDIO_FILE = "/Users/nicholasburczyk/Documents/Coding/FretWatch/audiovisual/recordings/Drop_C#.mp3"
 FPS = 30
-FFT_WINDOW_SECONDS = 0.25
+FFT_WINDOW_SECONDS = 0.05
 FREQ_MIN = 10
 FREQ_MAX = 1000
-TOP_NOTES = 3
+TOP_NOTES = 5
 NOTE_NAMES = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
 RESOLUTION = (1920, 1080)
-SCALE = 2
+SCALE = 4
 FFT_WINDOW_SIZE = None
 AUDIO_LENGTH = None
 
@@ -32,12 +32,10 @@ def number_to_freq(n): return 440 * 2.0 ** ((n - 69) / 12.0)
 def note_name(n): return NOTE_NAMES[n % 12] + str(int(n / 12 - 1))
 
 
-# Hanning window function
 def hanning_window(size):
     return 0.5 * (1 - np.cos(np.linspace(0, 2 * np.pi, size, False)))
 
 
-# Plot FFT
 def plot_fft(p, xf, fs, notes, dimensions=(960, 540)):
     layout = go.Layout(
         title="Frequency Spectrum",
@@ -76,31 +74,31 @@ def extract_sample(audio, frame_number, frame_offset, fft_window_size):
         return audio[begin:end]
 
 
-# Find top notes
+import numpy as np
+
 def find_top_notes(fft, num, xf):
-    if np.max(fft.real) < 0.001:
+    fft_real = fft.real
+    if np.max(fft_real) < 0.001:
         return []
 
-    lst = [x for x in enumerate(fft.real)]
-    lst = sorted(lst, key=lambda x: x[1], reverse=True)
-
-    idx = 0
+    indices = np.argsort(fft_real)[-num*2:][::-1]
     found = []
     found_note = set()
-    while (idx < len(lst)) and (len(found) < num):
-        f = xf[lst[idx][0]]
-        y = lst[idx][1]
+
+    for idx in indices:
+        f = xf[idx]
+        y = fft_real[idx]
         n = freq_to_number(f)
-        n0 = int(round(n))
-        name = note_name(n0)
+        name = note_name(int(round(n)))
 
         if name not in found_note:
             found_note.add(name)
-            s = [f, name, y]
-            found.append(s)
-        idx += 1
+            found.append([f, name, y])
+            if len(found) == num:
+                break
 
     return found
+
 
 
 def main():
